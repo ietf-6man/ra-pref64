@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC4033 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4033.xml">
+<!ENTITY RFC4861 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4861.xml">
+<!ENTITY RFC6052 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6052.xml">
+<!ENTITY RFC6105 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6105.xml">
+<!ENTITY RFC6146 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6146.xml">
+<!ENTITY RFC6147 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6147.xml">
+<!ENTITY RFC6877 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6877.xml">
+<!ENTITY RFC7050 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7050.xml">
+<!ENTITY RFC7225 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7225.xml">
+<!ENTITY RFC7556 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7556.xml">
+<!ENTITY RFC7858 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7858.xml">
+<!ENTITY RFC8305 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8305.xml">
+]>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<!-- used by XSLT processors -->
+<!-- For a complete list and description of processing instructions (PIs),
+     please see http://xml.resource.org/authoring/README.html. -->
+<!-- Below are generally applicable Processing Instructions (PIs) that most I-Ds might want to use.
+     (Here they are set differently than their defaults in xml2rfc v1.32) -->
+<?rfc strict="yes" ?>
+<!-- give errors regarding ID-nits and DTD validation -->
+<!-- control the table of contents (ToC) -->
+<?rfc toc="yes"?>
+<!-- generate a ToC -->
+<?rfc tocdepth="4"?>
+<!-- the number of levels of subsections in ToC. default: 3 -->
+<!-- control references -->
+<?rfc symrefs="yes"?>
+<!-- use symbolic references tags, i.e, [RFC2119] instead of [1] -->
+<?rfc sortrefs="yes" ?>
+<!-- sort the reference entries alphabetically -->
+<!-- control vertical white space
+     (using these PIs as follows is recommended by the RFC Editor) -->
+<?rfc compact="yes" ?>
+<!-- do not start each main section on a new page -->
+<?rfc subcompact="no" ?>
+<!-- keep one blank line between list items -->
+<!-- end of list of popular I-D processing instructions -->
+<rfc ipr="trust200902"
+     obsoletes=""
+     category="std"
+     docName="draft-ietf-6man-ra-pref64-00">
+
+  <!-- category values: std, bcp, info, exp, and historic -->
+
+  <!-- ***** FRONT MATTER ***** -->
+
+  <front>
+    <!-- The abbreviated title is used in the page header - it is only necessary if the
+         full title is longer than 39 characters -->
+
+    <title>Discovering PREF64 in Router Advertisements</title>
+
+    <!-- add 'role="editor"' below for the editors if appropriate -->
+
+    <author fullname="Lorenzo Colitti" initials="L." surname="Colitti">
+      <organization>Google</organization>
+
+      <address>
+        <postal>
+          <street>Roppongi 6-10-1</street>
+          <city>Minato</city>
+          <region>Tokyo</region>
+          <code>106-6126</code>
+          <country>JP</country>
+        </postal>
+
+        <phone></phone>
+        <email>lorenzo@google.com</email>
+      </address>
+    </author>
+
+    <author fullname="Erik Kline" initials="E." surname="Kline">
+      <organization>Google</organization>
+
+      <address>
+        <postal>
+          <street>Roppongi 6-10-1</street>
+          <city>Minato</city>
+          <region>Tokyo</region>
+          <code>106-6126</code>
+          <country>JP</country>
+        </postal>
+
+        <phone></phone>
+        <email>ek@google.com</email>
+      </address>
+    </author>
+
+    <author fullname="Jen Linkova" initials="J." surname="Linkova">
+      <organization>Google</organization>
+
+      <address>
+        <postal>
+          <street>1 Darling Island Rd</street>
+          <city>Pyrmont</city>
+          <region>NSW</region>
+          <code>2009</code>
+          <country>AU</country>
+        </postal>
+
+        <phone></phone>
+        <email>furry@google.com</email>
+      </address>
+    </author>
+
+    <date/>
+
+    <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
+         in the current day for you. If only the current year is specified, xml2rfc will fill
+	 in the current day and month for you. If the year is not the current one, it is
+	 necessary to specify at least a month (xml2rfc assumes day="1" if not specified for the
+	 purpose of calculating the expiry date).  With drafts it is normally sufficient to
+	 specify just the year. -->
+
+    <!-- Meta-data Declarations -->
+
+    <area>Internet</area>
+
+    <workgroup>IPv6 Maintenance</workgroup>
+
+    <!-- WG name at the upperleft corner of the doc,
+         IETF is fine for individual submissions.
+	 If this element is not present, the default is "Network Working Group",
+         which is used by the RFC Editor as a nod to the history of the IETF. -->
+
+    <keyword>template</keyword>
+
+    <!-- Keywords will be incorporated into HTML output
+         files in a meta tag but they have no effect on text or nroff
+         output. If you submit your draft to the RFC Editor, the
+         keywords will be used for the search engine. -->
+
+    <abstract>
+	    <t>This document specifies a Router Advertisement option to communicate NAT64 prefixes to clients.</t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section title="Introduction">
+
+      <t>NAT64 <xref target="RFC6146"/> with DNS64 <xref target="RFC6147"/> is a widely-deployed mechanism to provide IPv4 access on IPv6-only networks. In various scenarios, the host must be aware of the NAT64 prefix in use by the network. This document specifies a Router Advertisement <xref target="RFC4861"/> option to communicate the NAT64 prefix to hosts.</t>
+
+      <section title="Requirements Language">
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+        "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+        document are to be interpreted as described in <xref
+        target="RFC2119">RFC 2119</xref>.</t>
+      </section>
+      <section title="Terminology">
+	      <t>
+		      Pref64: an IPv6 prefix used for IPv6 address synthesis <xref target="RFC6146"/>;
+	      </t>
+	      <t>
+		      PvD: Provisioning Domain, a set of network configuration
+		      information; for more information, see <xref target="RFC7556"/>.
+	      </t>
+	      <t>
+		      PvD-aware host  A host that supports the association of network
+      configuration information into PvDs and the use of these PvDs.
+      Also named PvD-aware node in <xref target="RFC7556"/>.
+
+	      </t>
+	      <t>
+		      RA:    Router Advertisement, a message used by IPv6 routers to advertise their presence together
+		      with various link and Internet parameters (<xref target="RFC4861"/>);
+	      </t>
+
+      </section>
+    </section>
+
+    <section title="Use cases for communicating the NAT64 prefix to hosts">
+        <t>On networks employing NAT64, it is useful for hosts to know the NAT64 prefix for several reasons, including the following:
+            <list style="symbols">
+            <t>Local DNSSEC validation. As discussed in <xref target="RFC6147"/> section 2, the stub resolver in the host "will try to obtain (real) AAAA RRs, and in case they are not available, the DNS64 function will synthesize AAAA RRs for internal usage." This is required in order to use DNSSEC on a NAT64 network.</t>
+            <t>IPv4 address literals on an IPv6-only host. As described in <xref target="RFC8305"/> section 7.1, IPv6-only hosts connecting to IPv4 address literals can resolve the IPv4 literal to an IPv6 address.</t>
+            <t>464XLAT <xref target="RFC6877"/>. 464XLAT is widely deployed and requires that the host be aware of the NAT64 prefix.</t>
+            <t>Trusted DNS server. AAAA synthesis is required for the host to be able to use a DNS server not provided by the network (e.g., a DNS-over-TLS server with which the host has an existing trust relationship).</t>
+            <t>Networks with no DNS64 server. Hosts that support AAAA synthesis and that are aware of the NAT64 prefix in use do not need the network to perform the DNS64 function at all.</t>
+            </list>
+        </t>
+    </section>
+
+    <section title="Why include the NAT64 prefix in Router Advertisements">
+	    <t>Fate sharing: NAT64 requires a routing to be configured. IPv6 routing configuration requires receiving an IPv6 Router Advertisement <xref target="RFC4861"/>. Compared to currently-deployed NAT64 prefix discovery methods such as <xref target="RFC7050"/>, including the NAT64 prefix in the Router Advertisement minimizes the number of packets required to configure a host. This speeds up the process of connecting to a network that supports NAT64/DNS64, and simplifies host implementation by removing the possibility that the host can have an incomplete layer 3 configuration (e.g., IPv6 addresses and prefixes, but no NAT64 prefix).</t>
+      <t>Updatability: it is possible to change the NAT64 prefix at any time, because when it changes, it is possible to notify hosts by sending a new Router Advertisement.</t>
+      <t>Deployability: all IPv6 hosts and networks are required to support <xref target="RFC4861"/>. Other options such as <xref target="RFC7225"/> require implementing other protocols.</t>
+    </section>
+
+    <section title="Semantics">
+	    <t>This option only supports a NAT64 prefix length of 96 bits, as this is by the most common configuration used by hosts and supporting variable prefix length would significantly increase the option size. Networks using one of the other prefix lengths supported in (<xref target="RFC6052"/>) can use other mechanisms such as <xref target="RFC7050"/> or <xref target="RFC7225"/>. If different prefix lengths become common, another RA option can be created to configure them.</t>
+
+	    <t>This option specifies exactly one NAT64 prefix for all IPv4 destinations. If the network operator desires to route different parts of the IPv4 address space to different NAT64 devices, this can be accomplished by routing more specifics of the NAT64 prefix to those devices. For example, if the operator would like to route 10.0.0.0/8 through NAT64 device A and the rest of the IPv4 space through NAT64 device B, and the operator's NAT64 prefix is 2001:db8:a:b::/96, then the operator can route 2001:db8:a:b::a00:0/104 to NAT64 A and 2001:db8:a:b::/64 to NAT64 B.</t>
+
+            <t>This option may appear more than once in a Router Advertisement (e.g. in case of graceful renumbering the network from one NAT64 prefix to another). Host behaviour with regards to synthesizing IPv6 addresses from IPv4 addresses SHOULD follow the recommendations given in Section 3 of <xref target="RFC7050"/>, limited to the NAT64 prefixes that have non-zero lifetime.</t>
+
+            <t>In a network that provides both IPv4 and NAT64, it may be desirable for certain IPv4 addresses not to be translated. An example might be private address ranges that are local to the network and should not be reached through the NAT64. This type of configuration cannot be conveyed to hosts using this option, or through other NAT64 prefix provisioning mechanisms such as <xref target="RFC7050"/> or <xref target="RFC7225"/>. This problem does not apply in IPv6-only networks, because in such networks, the host does not have an IPv4 address and cannot reach any IPv4 destinations without the NAT64.</t>
+    </section>
+
+    <section anchor="Format" title="Option format">
+	     <figure align="center" anchor="fig_Option"
+                             title="NAT64 Prefix Option Format">
+ <artwork align="center"><![CDATA[
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|     Type      |    Length     |           Lifetime            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
++                            Prefix                             +
+|                                                               |
++                                                               +
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+				      ]]></artwork>
+		      </figure>
+
+		      <t>Fields:</t>
+		      <texttable style="none">
+			      <ttcol></ttcol>
+			      <ttcol></ttcol>
+
+			      <c>Type</c> <c>8-bit identifier of the RDNSS option type as assigned by IANA: TBD</c>
+
+				      <c>Length</c> <c> 8-bit unsigned integer.  The length of the option
+               (including the Type and Length fields) is in units of 8 octets. The sender MUST set the Length to 2.  A host MUST ignore the NAT64 prefix option if the length field value is 1. If the Length field value exceeds 2, the host MUST utilize the first 16 octets and ignore the rest of the option.</c>
+       <c>Lifetime</c>  <c>16-bit unsigned integer.  The maximum time in seconds over which this NAT64 prefix MAY be used. The value of Lifetime SHOULD by default be set to lesser of  3 x MaxRtrAdvInterval or 65535 seconds.
+               A value of zero means that the prefix MUST no longer be used.</c>
+	       <c>Prefix</c>   <c>The 96-bit NAT64 prefix.</c>
+       </texttable>
+            
+    </section>
+	    <section anchor="mult_src" title="Handling Multiple NAT64 Prefixes"> 
+		    <t>
+			    In some cases a host may receive multiple NAT64 prefixes from different sources. Possible scenarios include (but are not limited to):
+		    </t>
+	    <t><list style="symbols">
+			    <t> the host is using multiple mechanisms to discover Pref64 prefixes (e.g. by using PCP (<xref target="RFC7225"/>) and/or by resolving IPv4-only fully qualified domain name (<xref target="RFC7050"/>) in addition to receiving the Pref64 RA option);</t>
+			    <t> The pref64 option presents in a single RA more than once;</t>
+			    <t> the host receives multiple RAs with different Pref64 prefixes on one or multiple interfaces.</t>
+		    </list>
+	    </t>
+	    <t>When multiple Pref64 were discovered via RA Pref64 Option (the Option presents more than once in a singe RA or multiple RAs were received), host behaviour with regards to synthesizing IPv6 addresses from IPv4 addresses SHOULD follow the recommendations given in Section 3 of <xref target="RFC7050"/>, limited to the NAT64 prefixes that have non-zero lifetime..</t>
+    <t>
+	    When different Pref64 are discovered by using multiple mechanisms, hosts SHOULD select one source of infromation only. The RECOMMENDED order is:
+    <list style="symbols">
+		    <t>PCP-discovered prefixes (<xref target="RFC7225"/>), if supported;</t>
+		    <t>Pref64 discovered via RA Option;</t>
+		    <t>Pref64 resolving IPv4-only fully qualified domain name (<xref target="RFC7050"/>) </t>
+	    </list>
+    </t>
+    <t>Note that if the network provides Pref64 both via this RA option and <xref target="RFC7225"/>, hosts that receive the Pref64 via RA option may choose to use it imediately before waiting for PCP to complete, and therefore some traffic may not reflect any more detailed configuration provided by PCP.</t>
+    </section>
+
+    <section title="Multihoming">
+    <t>Like most IPv6 configuration information, the Pref64 option is specific to the network on which it is received. For example, a Pref64 option received on a particular wireless network may not be usable unless the traffic is also sourced on that network. Similarly, a host connected to a cellular network that povides NAT64 generally cannot use that NAT64 for destinations reached through a VPN tunnel that terminates outside that network.</t>
+
+    <t>Thus, correct use of this option on a multihomed host generally requires the host to be PVD-aware.</t>
+
+    <t>This issue is not specific to the Pref64 RA option and, for example, is quite typical for DNS resolving on multihomed hosts (e.g. a host might resolve a destination name by using the corporate DNS server via the VPN tunnel but then send the traffic via its Internet-facing interface).</t>
+    </section>
+
+
+    <section anchor="IANA" title="IANA Considerations">
+      <t>The IANA is requested to assign a new IPv6 Neighbor Discovery Option type for the PREF64 option defined in this document.</t>
+
+<texttable anchor="option_table">
+    <ttcol align="left">Option Name</ttcol>
+    <ttcol align="left">Type</ttcol>
+    <c>PREF64 option</c>
+    <c>(TBD)</c>
+</texttable>
+
+      <t>The IANA registry for these options is:
+        <list><t>
+          <eref target="https://www.iana.org/assignments/icmpv6-parameters">
+          https://www.iana.org/assignments/icmpv6-parameters</eref>
+      </t></list></t>
+    </section>
+
+    <section anchor="Security" title="Security Considerations">
+      <t>Because Router Advertisements are required in all IPv6 configuration scenarios, on IPv6-only networks, Router Advertisements must already be secured, e.g., by deploying RA guard <xref target="RFC6105"/>. Providing all configuration in Router Advertisements increases security by ensuring that no other protocols can be abused by malicious attackers to provide hosts with invalid configuration.</t>
+      <t>The security measures that must already be in place to ensure that Router Advertisements are only received from legitimate sources eliminate the problem of NAT64 prefix validation described in section 3.1 of <xref target="RFC7050"/>.</t>
+    </section>
+    <section anchor="Acknowledgements" title="Acknowledgements">
+            <t>
+		    Thanks to the following people (in alphabetical order) for their review and feedback:
+		    Mikael Abrahamsson, Brian E Carpenter, Nick Heatley, Tatuya Jinmei, David Schinazi.
+    </t>
+    </section>
+  </middle>
+
+  <!--  *****BACK MATTER ***** -->
+
+  <back>
+    <references title="Normative References">
+      &RFC2119;
+      &RFC6052;
+    </references>
+
+    <references title="Informative References">
+      &RFC4033;
+      &RFC4861;
+      &RFC6105;
+      &RFC6146;
+      &RFC6147;
+      &RFC6877;
+      &RFC7050;
+      &RFC7225;
+      &RFC7556;
+      &RFC7858;
+      &RFC8305;
+       <?rfc include="reference.I-D.ietf-intarea-provisioning-domains.xml"?>
+    </references>
+
+  </back>
+</rfc>
