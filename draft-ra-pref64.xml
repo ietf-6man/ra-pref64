@@ -42,7 +42,7 @@
 <rfc ipr="trust200902"
      obsoletes=""
      category="std"
-     docName="draft-ietf-6man-ra-pref64-00">
+     docName="draft-ietf-6man-ra-pref64-01">
 
   <!-- category values: std, bcp, info, exp, and historic -->
 
@@ -191,13 +191,13 @@
     </section>
 
     <section title="Semantics">
-	    <t>This option only supports a NAT64 prefix length of 96 bits, as this is by the most common configuration used by hosts and supporting variable prefix length would significantly increase the option size. Networks using one of the other prefix lengths supported in (<xref target="RFC6052"/>) can use other mechanisms such as <xref target="RFC7050"/> or <xref target="RFC7225"/>. If different prefix lengths become common, another RA option can be created to configure them.</t>
-
+	    <t>To support prefix lengths defined in (<xref target="RFC6052"/>) this option contains the prefix length field. However as /96 prefix is considered to be the most common usecase, the prefix length field is optional and only presents for non-/96 prefixes. It allows to minimize the option length for the most common case and increase it to 196 bits for non-/96 prefixes only (see <xref target="Format"/> below for more details).</t>
+		    
 	    <t>This option specifies exactly one NAT64 prefix for all IPv4 destinations. If the network operator desires to route different parts of the IPv4 address space to different NAT64 devices, this can be accomplished by routing more specifics of the NAT64 prefix to those devices. For example, if the operator would like to route 10.0.0.0/8 through NAT64 device A and the rest of the IPv4 space through NAT64 device B, and the operator's NAT64 prefix is 2001:db8:a:b::/96, then the operator can route 2001:db8:a:b::a00:0/104 to NAT64 A and 2001:db8:a:b::/64 to NAT64 B.</t>
 
             <t>This option may appear more than once in a Router Advertisement (e.g. in case of graceful renumbering the network from one NAT64 prefix to another). Host behaviour with regards to synthesizing IPv6 addresses from IPv4 addresses SHOULD follow the recommendations given in Section 3 of <xref target="RFC7050"/>, limited to the NAT64 prefixes that have non-zero lifetime.</t>
 
-            <t>In a network that provides both IPv4 and NAT64, it may be desirable for certain IPv4 addresses not to be translated. An example might be private address ranges that are local to the network and should not be reached through the NAT64. This type of configuration cannot be conveyed to hosts using this option, or through other NAT64 prefix provisioning mechanisms such as <xref target="RFC7050"/> or <xref target="RFC7225"/>. This problem does not apply in IPv6-only networks, because in such networks, the host does not have an IPv4 address and cannot reach any IPv4 destinations without the NAT64.</t>
+	    <t>In a network (or a provisioning domain) that provides both IPv4 and NAT64, it may be desirable for certain IPv4 addresses not to be translated. An example might be private address ranges that are local to the network/provisioning domain and should not be reached through the NAT64. This type of configuration cannot be conveyed to hosts using this option, or through other NAT64 prefix provisioning mechanisms such as <xref target="RFC7050"/> or <xref target="RFC7225"/>. This problem does not apply in IPv6-only networks, because in such networks, the host does not have an IPv4 address and cannot reach any IPv4 destinations without the NAT64. The multihoming and multiple provisioning domains scenarios are discussed in <xref target="sec_mpvd"/>.</t>
     </section>
 
     <section anchor="Format" title="Option format">
@@ -211,10 +211,14 @@
 |     Type      |    Length     |           Lifetime            |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                                                               |
-+                            Prefix                             +
-|                                                               |
++                                                               +
+|              Highest 96 bits of the Prefix                    |
 +                                                               +
 |                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Lowest bits (96-127) of the prefix (optional, if Length > 2)  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Prefix Length |                  Reserved                     |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
@@ -229,10 +233,13 @@
 			      <c>Type</c> <c>8-bit identifier of the RDNSS option type as assigned by IANA: TBD</c>
 
 				      <c>Length</c> <c> 8-bit unsigned integer.  The length of the option
-               (including the Type and Length fields) is in units of 8 octets. The sender MUST set the Length to 2.  A host MUST ignore the NAT64 prefix option if the length field value is 1. If the Length field value exceeds 2, the host MUST utilize the first 16 octets and ignore the rest of the option.</c>
+               (including the Type and Length fields) is in units of 8 octets. If the prefix length is 96 bits the sender MUST set the Length to 2 and include the 96 bits of the prefix in the option. If the prefix length is not 96 bits then the sender MUST set the length to 3 and include all 128 bits of the prefix in the Prefix field and set the Prefix Length field to the prefix length.  A host MUST ignore the NAT64 prefix option if the length field value is 1. If the Length field value exceeds 3, the host MUST utilize the first 21 octets and ignore the rest of the option.</c>
        <c>Lifetime</c>  <c>16-bit unsigned integer.  The maximum time in seconds over which this NAT64 prefix MAY be used. The value of Lifetime SHOULD by default be set to lesser of  3 x MaxRtrAdvInterval or 65535 seconds.
                A value of zero means that the prefix MUST no longer be used.</c>
-	       <c>Prefix</c>   <c>The 96-bit NAT64 prefix.</c>
+       <c>Highest 96 bits of the prefix</c>   <c>96-bit unsigned integer. Contains bits 0 - 95 of the NAT64 prefix.</c>
+       <c>Lowest bits of the prefix</c> <c> 32-bit unsigned integer. Contains bits 96 - 127 of the NAT64 prefix.</c>
+       <c>Prefix Length</c> <c>8-bit unsigned integer. The sender MUST set it only to the values specified in <xref target="RFC6052"/> (32, 40, 48, 56, 64, or 96). The host SHOULD ignore the NAT64 prefix option if the prefix length value is not set to one of those numbers.</c>
+       <c>Reserved</c> <c>A 3-bit unused field.  It MUST be initialized to zero by the sender and MUST be ignored by the receiver.</c>
        </texttable>
             
     </section>
@@ -258,7 +265,7 @@
     <t>Note that if the network provides Pref64 both via this RA option and <xref target="RFC7225"/>, hosts that receive the Pref64 via RA option may choose to use it imediately before waiting for PCP to complete, and therefore some traffic may not reflect any more detailed configuration provided by PCP.</t>
     </section>
 
-    <section title="Multihoming">
+    <section anchor="sec_mpvd" title="Multihoming">
     <t>Like most IPv6 configuration information, the Pref64 option is specific to the network on which it is received. For example, a Pref64 option received on a particular wireless network may not be usable unless the traffic is also sourced on that network. Similarly, a host connected to a cellular network that povides NAT64 generally cannot use that NAT64 for destinations reached through a VPN tunnel that terminates outside that network.</t>
 
     <t>Thus, correct use of this option on a multihomed host generally requires the host to be PVD-aware.</t>
@@ -291,7 +298,7 @@
     <section anchor="Acknowledgements" title="Acknowledgements">
             <t>
 		    Thanks to the following people (in alphabetical order) for their review and feedback:
-		    Mikael Abrahamsson, Brian E Carpenter, Nick Heatley, Tatuya Jinmei, David Schinazi.
+		    Mikael Abrahamsson, Mark Andrews, Brian E Carpenter, Nick Heatley, Martin Hunek, Tatuya Jinmei, Michael Richardson, David Schinazi.
     </t>
     </section>
   </middle>
