@@ -1,2 +1,9 @@
 draft-ra-pref64.txt
 draft-ra-pref64-*.txt
+*.html
+*.pdf
+*.redxml
+*.swp
+*.txt
+*.upload
+*~
