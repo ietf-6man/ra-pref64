@@ -42,7 +42,7 @@
 <rfc ipr="trust200902"
      obsoletes=""
      category="std"
-     docName="draft-ietf-6man-ra-pref64-03">
+     docName="draft-ietf-6man-ra-pref64-04">
 
   <!-- category values: std, bcp, info, exp, and historic -->
 
@@ -295,7 +295,7 @@ PvD-aware routers MUST only compare information scoped to the same implicit or e
     <section anchor="Acknowledgements" title="Acknowledgements">
             <t>
 		    Thanks to the following people (in alphabetical order) for their review and feedback:
-		    Mikael Abrahamsson, Mark Andrews, Brian E Carpenter, Nick Heatley, Martin Hunek, Tatuya Jinmei, Erik Kline, Michael Richardson, David Schinazi.
+		    Mikael Abrahamsson, Mark Andrews, Brian E Carpenter, David Farmer, Nick Heatley, Martin Hunek, Tatuya Jinmei, Erik Kline, Jordi Palet Martinez, Michael Richardson, David Schinazi.
     </t>
     </section>
   </middle>
