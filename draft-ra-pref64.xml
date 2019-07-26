@@ -170,7 +170,7 @@
     </section>
 
     <section title="Semantics">
-	    <t>To support prefix lengths defined in (<xref target="RFC6052"/>) this option contains the prefix length field. However as /96 prefix is considered to be the most common usecase, the prefix length field is optional and only presents for non-/96 prefixes. It allows to keep the option length to a minimum (16 bytes) for the most common case and increase it to 20 bytes for non-/96 prefixes only (see <xref target="Format"/> below for more details).</t>
+	    <t>To support prefix lengths defined in (<xref target="RFC6052"/>) this option contains the prefix length field. However as /96 prefix is considered to be the most common use case, the prefix length field is optional and only presents for non-/96 prefixes. It allows to keep the option length to a minimum (16 bytes) for the most common case and increase it to 20 bytes for non-/96 prefixes only (see <xref target="Format"/> below for more details).</t>
 		    
 	    <t>This option specifies exactly one NAT64 prefix for all IPv4 destinations. If the network operator desires to route different parts of the IPv4 address space to different NAT64 devices, this can be accomplished by routing more specifics of the NAT64 prefix to those devices. For example, if the operator would like to route 10.0.0.0/8 through NAT64 device A and the rest of the IPv4 space through NAT64 device B, and the operator's NAT64 prefix is 2001:db8:a:b::/96, then the operator can route 2001:db8:a:b::a00:0/104 to NAT64 A and 2001:db8:a:b::/64 to NAT64 B.</t>
 
@@ -238,20 +238,20 @@
 			    <t> the host receives multiple RAs with different Pref64 prefixes on one or multiple interfaces.</t>
 		    </list>
 	    </t>
-	    <t>When multiple Pref64 were discovered via RA Pref64 Option (the Option presents more than once in a singe RA or multiple RAs were received), host behaviour with regards to synthesizing IPv6 addresses from IPv4 addresses SHOULD follow the recommendations given in Section 3 of <xref target="RFC7050"/>, limited to the NAT64 prefixes that have non-zero lifetime..</t>
+	    <t>When multiple Pref64 were discovered via RA Pref64 Option (the Option presents more than once in a single RA or multiple RAs were received), host behaviour with regards to synthesizing IPv6 addresses from IPv4 addresses SHOULD follow the recommendations given in Section 3 of <xref target="RFC7050"/>, limited to the NAT64 prefixes that have non-zero lifetime..</t>
     <t>
-	    When different Pref64 are discovered by using multiple mechanisms, hosts SHOULD select one source of infromation only. The RECOMMENDED order is:
+	    When different Pref64 are discovered by using multiple mechanisms, hosts SHOULD select one source of information only. The RECOMMENDED order is:
     <list style="symbols">
 		    <t>PCP-discovered prefixes (<xref target="RFC7225"/>), if supported;</t>
 		    <t>Pref64 discovered via RA Option;</t>
 		    <t>Pref64 resolving IPv4-only fully qualified domain name (<xref target="RFC7050"/>) </t>
 	    </list>
     </t>
-    <t>Note that if the network provides Pref64 both via this RA option and <xref target="RFC7225"/>, hosts that receive the Pref64 via RA option may choose to use it imediately before waiting for PCP to complete, and therefore some traffic may not reflect any more detailed configuration provided by PCP.</t>
+    <t>Note that if the network provides Pref64 both via this RA option and <xref target="RFC7225"/>, hosts that receive the Pref64 via RA option may choose to use it immediately before waiting for PCP to complete, and therefore some traffic may not reflect any more detailed configuration provided by PCP.</t>
     </section>
 
     <section anchor="sec_mpvd" title="Multihoming">
-    <t>Like most IPv6 configuration information, the Pref64 option is specific to the network on which it is received. For example, a Pref64 option received on a particular wireless network may not be usable unless the traffic is also sourced on that network. Similarly, a host connected to a cellular network that povides NAT64 generally cannot use that NAT64 for destinations reached through a VPN tunnel that terminates outside that network.</t>
+    <t>Like most IPv6 configuration information, the Pref64 option is specific to the network on which it is received. For example, a Pref64 option received on a particular wireless network may not be usable unless the traffic is also sourced on that network. Similarly, a host connected to a cellular network that provides NAT64 generally cannot use that NAT64 for destinations reached through a VPN tunnel that terminates outside that network.</t>
 
     <t>Thus, correct use of this option on a multihomed host generally requires the host to support the concept of multiple Provisioning Domains (PvD, a set of configuration information associated with a network, <xref target="RFC7556"/>) and to be able to use these PvDs.</t>
 
@@ -259,7 +259,7 @@
     </section>
     <section anchor="cons" title="Pref64 Consistency"> 
 	    <t>
-	    Section 6.2.7 of <xref target="RFC4861"/> recommends that routers inspects RAs sent by other routers to ensure that all routers onlink advertise the consistent information. Routers SHOULD inspect valid Pref64 options received on a given link and verify the consistency. Detected inconsistencies indicate that one or more routers might be misconfigured. Routers SHOULD log such cases  to system or network management.
+	    Section 6.2.7 of <xref target="RFC4861"/> recommends that routers inspect RAs sent by other routers to ensure that all routers onlink advertise the consistent information. Routers SHOULD inspect valid Pref64 options received on a given link and verify the consistency. Detected inconsistencies indicate that one or more routers might be misconfigured. Routers SHOULD log such cases to system or network management.
 Routers SHOULD check and compare the following information:
     <list style="symbols">
 	    <t>set of Pref64 with non-zero lifetime;</t>
@@ -295,7 +295,7 @@ PvD-aware routers MUST only compare information scoped to the same implicit or e
     <section anchor="Acknowledgements" title="Acknowledgements">
             <t>
 		    Thanks to the following people (in alphabetical order) for their review and feedback:
-		    Mikael Abrahamsson, Mark Andrews, Brian E Carpenter, David Farmer, Nick Heatley, Martin Hunek, Tatuya Jinmei, Erik Kline, Jordi Palet Martinez, Michael Richardson, David Schinazi.
+		    Mikael Abrahamsson, Mark Andrews, Brian E Carpenter, David Farmer, Nick Heatley, Martin Hunek, Tatuya Jinmei, Erik Kline, Jordi Palet Martinez, Tommy Pauly, Michael Richardson, David Schinazi.
     </t>
     </section>
   </middle>
