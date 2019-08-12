@@ -305,12 +305,12 @@ PvD-aware routers MUST only compare information scoped to the same implicit or e
   <back>
     <references title="Normative References">
       &RFC2119;
+      &RFC4861;
       &RFC6052;
     </references>
 
     <references title="Informative References">
       &RFC4033;
-      &RFC4861;
       &RFC6105;
       &RFC6146;
       &RFC6147;
