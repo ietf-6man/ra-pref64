@@ -157,7 +157,7 @@
             <t>Local DNSSEC validation. As discussed in <xref target="RFC6147"/> section 2, the stub resolver in the host "will try to obtain (real) AAAA RRs, and in case they are not available, the DNS64 function will synthesize AAAA RRs for internal usage." This is required in order to use DNSSEC on a NAT64 network.</t>
             <t>IPv4 address literals on an IPv6-only host. As described in <xref target="RFC8305"/> section 7.1, IPv6-only hosts connecting to IPv4 address literals can resolve the IPv4 literal to an IPv6 address.</t>
             <t>464XLAT <xref target="RFC6877"/>. 464XLAT is widely deployed and requires that the host be aware of the NAT64 prefix.</t>
-            <t>Trusted DNS server. AAAA synthesis is required for the host to be able to use a DNS server not provided by the network (e.g., a DNS-over-TLS server with which the host has an existing trust relationship).</t>
+	    <t>Trusted DNS server. AAAA synthesis is required for the host to be able to use a DNS server not provided by the network (e.g., a DNS-over-TLS server (<xref target="RFC7858"/>) with which the host has an existing trust relationship).</t>
             <t>Networks with no DNS64 server. Hosts that support AAAA synthesis and that are aware of the NAT64 prefix in use do not need the network to perform the DNS64 function at all.</t>
             </list>
         </t>
