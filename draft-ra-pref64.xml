@@ -296,7 +296,7 @@ PvD-aware routers MUST only compare information scoped to the same implicit or e
     <section anchor="Acknowledgements" title="Acknowledgements">
             <t>
 		    Thanks to the following people (in alphabetical order) for their review and feedback:
-		    Mikael Abrahamsson, Mark Andrews, Brian E Carpenter, David Farmer, Nick Heatley, Martin Hunek, Tatuya Jinmei, Erik Kline, David Lamparter, Jordi Palet Martinez, Tommy Pauly, Michael Richardson, David Schinazi.
+		    Mikael Abrahamsson, Mark Andrews, Brian E Carpenter, David Farmer, Nick Heatley, Robert Hinden, Martin Hunek, Tatuya Jinmei, Erik Kline, David Lamparter, Jordi Palet Martinez, Tommy Pauly, Michael Richardson, David Schinazi, Ole Troan.
     </t>
     </section>
   </middle>
