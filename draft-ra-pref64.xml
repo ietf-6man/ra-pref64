@@ -160,9 +160,9 @@
 	    <t>Trusted DNS server. AAAA synthesis is required for the host to be able to use a DNS server not provided by the network (e.g., a DNS-over-TLS server <xref target="RFC7858"/> with which the host has an existing trust relationship).</t>
 	    <t>Networks with no DNS64 server. Hosts that support AAAA synthesis and that are aware of the NAT64 prefix in use do not need the network to perform the DNS64 function at all.</t>
     </list></t>
-    <t> Enabling NAT64 address synthesis on end hosts. For example:
+    <t> Enabling NAT64 address translation functions on end hosts. For example:
 	    <list style="symbols">
-            <t>IPv4 address literals on an IPv6-only host. As described in <xref target="RFC8305"/> section 7.1, IPv6-only hosts connecting to IPv4 address literals can resolve the IPv4 literal to an IPv6 address.</t>
+            <t>IPv4 address literals on an IPv6-only host. As described in <xref target="RFC8305"/> section 7.1, IPv6-only hosts connecting to IPv4 address literals can translate the IPv4 literal to an IPv6 literal.</t>
             <t>464XLAT <xref target="RFC6877"/>. 464XLAT requires the host be aware of the NAT64 prefix.</t>
             </list>
     </t>
@@ -177,7 +177,7 @@
       <t>Deployability: all IPv6 hosts and networks are required to support Neighbor Discovery <xref target="RFC4861"/> so just a minor extension to the existing implementation is required. Other options such as <xref target="RFC7225"/> require implementing other protocols (e.g. PCP <xref target="RFC7225"/>) which could be considered an obstacle for deplyoment.</t>
     </section>
 
-    <section title="Usage Guidelnines">
+    <section title="Usage Guidelines">
 	    <t>To support prefix lengths defined in <xref target="RFC6052"/> this option contains the prefix length field. However as /96 prefix is considered to be the most common use case, the prefix length field is optional and only presents for non-/96 prefixes. It allows to keep the option length to a minimum (16 octets) for the most common case and increase it to 24 octets for non-/96 prefixes only (see <xref target="Format"/> below for more details).</t>
 		    
 	    <t>This option specifies exactly one NAT64 prefix for all IPv4 destinations. If the network operator desires to route different parts of the IPv4 address space to different NAT64 devices, this can be accomplished by routing more specifics of the NAT64 prefix to those devices. For example, if the operator would like to route 10.0.0.0/8 through NAT64 device A and the rest of the IPv4 space through NAT64 device B, and the operator's NAT64 prefix is 2001:db8:a:b::/96, then the operator can route 2001:db8:a:b::a00:0/104 to NAT64 A and 2001:db8:a:b::/64 to NAT64 B.</t>
@@ -228,7 +228,7 @@
        <c>Highest 96 bits of the prefix</c>   <c>96-bit unsigned integer. Contains bits 0 - 95 of the NAT64 prefix.</c>
 				      <c></c><c></c>
 				      <c></c><c></c>
-				      <c>Lowest bits of the prefix</c> <c> 32-bit unsigned integer. Contains bits 96 - 127 of the NAT64 prefix. This field is optional and presents only if the prefix length is not 96 bits and the Length field value is 3.</c>
+				      <c>Lowest bits of the prefix</c> <c> 32-bit unsigned integer. Contains bits 96 - 127 of the NAT64 prefix. This field is optional and is present only if the prefix length is not 96 bits and the Length field value is 3.</c>
 				      <c></c><c></c>
        <c>Prefix Length</c> <c>8-bit unsigned integer. Optional field which present only if the prefix length is not 96 bits. The sender MUST set it only to one of the following values: 32, 40, 48, 56, 64 (defined in <xref target="RFC6052"/>). The receiver MUST ignore the PREF64 option if the prefix length value is not set to one of those numbers. </c>
 				      <c></c><c></c>
