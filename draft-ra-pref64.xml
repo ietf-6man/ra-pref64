@@ -195,7 +195,7 @@
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|     Type      |    Length     |           Lifetime            |
+|     Type      |    Length     |      Lifetime           | PL  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                                                               |
 +                                                               +
@@ -203,11 +203,6 @@
 +                                                               +
 |                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-| Lowest bits (96-127) of the prefix (optional, if Length > 2)  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-| Prefix Length |                  Reserved                     |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
 
 				      ]]></artwork>
 		      </figure>
@@ -220,19 +215,13 @@
 			      <c>Type</c> <c>8-bit identifier of the PREF64 option type as assigned by IANA: TBD</c>
 
 				      <c>Length</c> <c> 8-bit unsigned integer.  The length of the option
-					      (including the Type and Length fields) is in units of 8 octets. If the prefix length is 96 bits the sender MUST set the Length to 2 and include the 96 bits of the prefix in the option. If the prefix length is not 96 bits then the sender MUST set the length to 3 and include all 128 bits of the prefix in the Prefix field and set the Prefix Length field to the prefix length.  The receiver MUST ignore the PREF64 option if the length field value is 1 or if the Length field value exceeds 3.</c>
+					      (including the Type and Length fields) is in units of 8 octets. The sender MUST set the length to 2.  The receiver MUST ignore the PREF64 option if the length field value is not 2.</c>
 				      <c></c><c></c>
-       <c>Lifetime</c>  <c>16-bit unsigned integer.  The maximum time in seconds over which this NAT64 prefix MAY be used. The value of Lifetime SHOULD by default be set to lesser of  3 x MaxRtrAdvInterval or 65535 seconds.
-               A value of zero means that the prefix MUST no longer be used.</c>
+       <c>Lifetime</c>  <c>13-bit unsigned integer. The maximum time in units of 8 secons over which this NAT64 prefix MAY be used. The value of Lifetime SHOULD by default be set to 3 x MaxRtrAdvInterval divided by 8. The reciever MUST multiply the Lifetime value by 8 to calculate the maximum time in seconds the prefix MAY be used. A value of zero means that the prefix MUST no longer be used.</c>
+       <c></c><c></c>
+       <c>PL (Prefix Length)</c><c>3-bit unsigned integer.This field encodes the NAT64 Prefix Length. The PL field values 0,1,2,3,4 and 5 indicate the NAT64 prefix length of 96,64,56,48,40 and 32 bits respectively. The reciever MUST ignore the PREF64 option if the prefix length field is not set to one of those values. </c>
 				      <c></c><c></c>
        <c>Highest 96 bits of the prefix</c>   <c>96-bit unsigned integer. Contains bits 0 - 95 of the NAT64 prefix.</c>
-				      <c></c><c></c>
-				      <c></c><c></c>
-				      <c>Lowest bits of the prefix</c> <c> 32-bit unsigned integer. Contains bits 96 - 127 of the NAT64 prefix. This field is optional and is present only if the prefix length is not 96 bits and the Length field value is 3.</c>
-				      <c></c><c></c>
-       <c>Prefix Length</c> <c>8-bit unsigned integer. Optional field which present only if the prefix length is not 96 bits. The sender MUST set it only to one of the following values: 32, 40, 48, 56, 64 (defined in <xref target="RFC6052"/>). The receiver MUST ignore the PREF64 option if the prefix length value is not set to one of those numbers. </c>
-				      <c></c><c></c>
-       <c>Reserved</c> <c>A 3-byte unused field.  If present it MUST be initialized to zero by the sender and MUST be ignored by the receiver. This field is optional and presents only if the prefix length is not 96 bits.</c>
        </texttable>
             
     </section>
