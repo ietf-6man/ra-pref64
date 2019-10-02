@@ -42,7 +42,7 @@
 <rfc ipr="trust200902"
      obsoletes=""
      category="std"
-     docName="draft-ietf-6man-ra-pref64-05">
+     docName="draft-ietf-6man-ra-pref64-06">
 
   <!-- category values: std, bcp, info, exp, and historic -->
 
@@ -217,9 +217,9 @@
 				      <c>Length</c> <c> 8-bit unsigned integer.  The length of the option
 					      (including the Type and Length fields) is in units of 8 octets. The sender MUST set the length to 2.  The receiver MUST ignore the PREF64 option if the length field value is not 2.</c>
 				      <c></c><c></c>
-       <c>Lifetime</c>  <c>13-bit unsigned integer. The maximum time in units of 8 secons over which this NAT64 prefix MAY be used. The value of Lifetime SHOULD by default be set to the lesser of 3 x MaxRtrAdvInterval divided by 8 or 8191. The reciever MUST multiply the Lifetime value by 8 to calculate the maximum time in seconds the prefix MAY be used. Lifetime of 0 indicates that the prefix SHOULD NOT be used anymore. Router vendors SHOULD allow adminstrators to specify non-zero lifetime values which are not divisible by 8. In such cases the router SHOULD round the provided value up to the lesser of nearest integer divisible by 8 or 65528, divide the result by 8 and set the Lifetime field to the resulting value.</c>
+       <c>Lifetime</c>  <c>13-bit unsigned integer. The maximum time in units of 8 seconds over which this NAT64 prefix MAY be used. The value of Lifetime SHOULD by default be set to the lesser of 3 x MaxRtrAdvInterval divided by 8 or 8191. The reciever MUST multiply the Lifetime value by 8 to calculate the maximum time in seconds the prefix MAY be used. Lifetime of 0 indicates that the prefix SHOULD NOT be used anymore. Router vendors SHOULD allow adminstrators to specify non-zero lifetime values which are not divisible by 8. In such cases the router SHOULD round the provided value up to the lesser of nearest integer divisible by 8 or 65528, divide the result by 8 and set the Lifetime field to the resulting value.</c>
        <c></c><c></c>
-       <c>PLC (Prefix Length Code)</c><c>3-bit unsigned integer.This field encodes the NAT64 Prefix Length. The PL field values 0,1,2,3,4 and 5 indicate the NAT64 prefix length of 96,64,56,48,40 and 32 bits respectively. The reciever MUST ignore the PREF64 option if the prefix length field is not set to one of those values. </c>
+       <c>PLC (Prefix Length Code)</c><c>3-bit unsigned integer.This field encodes the NAT64 Prefix Length. The PLC field values 0,1,2,3,4 and 5 indicate the NAT64 prefix length of 96,64,56,48,40 and 32 bits respectively. The reciever MUST ignore the PREF64 option if the prefix length code field is not set to one of those values. </c>
 				      <c></c><c></c>
        <c>Highest 96 bits of the prefix</c>   <c>96-bit unsigned integer. Contains bits 0 - 95 of the NAT64 prefix.</c>
        </texttable>
