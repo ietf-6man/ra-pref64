@@ -217,7 +217,7 @@
 				      <c></c><c></c>
        <c>Lifetime</c>  <c>13-bit unsigned integer. The maximum time in units of 8 seconds over which this NAT64 prefix MAY be used. The value of Lifetime SHOULD by default be set to the lesser of 3 x MaxRtrAdvInterval divided by 8, or 8191. The receiver MUST multiply the Lifetime value by 8 (for example, by logical left shift) to calculate the maximum time in seconds the prefix MAY be used. Lifetime of 0 indicates that the prefix SHOULD NOT be used anymore. Router vendors SHOULD allow administrators to specify non-zero lifetime values which are not divisible by 8. In such cases the router SHOULD round the provided value up to the lesser of nearest integer divisible by 8, or 65528 and divide the result by 8 (or just perform a logical right-shift by 3) and set the Lifetime field to the resulting value.</c>
        <c></c><c></c>
-       <c>PLC (Prefix Length Code)</c><c>3-bit unsigned integer. This field encodes the NAT64 Prefix Length. The PLC field values 0, 1, 2, 3, 4 and 5 indicate the NAT64 prefix length of 96, 64, 56, 48, 40 and 32 bits respectively. The receiver MUST ignore the PREF64 option if the prefix length code field is not set to one of those values. </c>
+       <c>PLC (Prefix Length Code)</c><c>3-bit unsigned integer. This field encodes the NAT64 Prefix Length defined in <xref target="RFC6052"/>. The PLC field values 0, 1, 2, 3, 4 and 5 indicate the NAT64 prefix length of 96, 64, 56, 48, 40 and 32 bits respectively. The receiver MUST ignore the PREF64 option if the prefix length code field is not set to one of those values. </c>
 				      <c></c><c></c>
        <c>Highest 96 bits of the prefix</c>   <c>96-bit unsigned integer. Contains bits 0 - 95 of the NAT64 prefix.</c>
        </texttable>
@@ -299,16 +299,13 @@ PvD-aware routers MUST only compare information scoped to the same implicit or e
     </references>
 
     <references title="Informative References">
-      &RFC4033;
       &RFC6105;
       &RFC6146;
       &RFC6147;
       &RFC6877;
       &RFC7225;
-      &RFC7556;
       &RFC7858;
       &RFC8305;
-       <?rfc include="reference.I-D.ietf-intarea-provisioning-domains.xml"?>
     </references>
 
   </back>
