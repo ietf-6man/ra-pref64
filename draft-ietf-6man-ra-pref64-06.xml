@@ -60,13 +60,12 @@
       <organization>Google</organization>
 
       <address>
-	      <postal>
-		 <street>Shibuya 3-21-3</street>
-           <city>Shibuya</city>
-           <region>Tokyo</region>
-           <code>150-0002</code>
-           <country>JP</country>
-
+	 <postal>
+          <street>Shibuya 3-21-3</street>
+          <city>Shibuya</city>
+          <region>Tokyo</region>
+          <code>150-0002</code>
+          <country>JP</country>
         </postal>
 
         <phone></phone>
