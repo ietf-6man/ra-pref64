@@ -257,7 +257,7 @@ Routers SHOULD check and compare the following information:
 	    <t>set of PREF64 with zero lifetime.</t>
 </list>
 
-Provisional Domains (PvD, <xref target="RFC7556"/>)-aware routers MUST only compare information scoped to the same implicit or explicit PvD.
+Provisioning Domains (PvD, <xref target="RFC7556"/>)-aware routers MUST only compare information scoped to the same implicit or explicit PvD.
 </t>
     </section>
 
