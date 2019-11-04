@@ -120,14 +120,14 @@
          keywords will be used for the search engine. -->
 
     <abstract>
-	    <t>This document specifies a Neighbor Discovery option to be used in Router Advertisements to communicate NAT64 prefixes to hosts..</t>
+	    <t>This document specifies a Neighbor Discovery option to be used in Router Advertisements to communicate NAT64 prefixes to hosts.</t>
     </abstract>
   </front>
 
   <middle>
     <section title="Introduction">
 
-      <t>NAT64 <xref target="RFC6146"/> with DNS64 <xref target="RFC6147"/> is a widely-deployed mechanism to provide IPv4 access on IPv6-only networks. In various scenarios, the host must be aware of the NAT64 prefix in use by the network. This document specifies a Router Advertisement <xref target="RFC4861"/> option to communicate the NAT64 prefix to hosts.</t>
+	    <t>NAT64 <xref target="RFC6146"/> with DNS64 <xref target="RFC6147"/> is a widely-deployed mechanism to provide IPv4 access on IPv6-only networks. In various scenarios, the host must be aware of the NAT64 prefix in use by the network. This document specifies a Neighbor Discovery <xref target="RFC4861"/> option to be used in Router Advertisements to communicate NAT64 prefixes to hosts.</t>
 
       <section title="Requirements Language">
 	        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -257,7 +257,7 @@ Routers SHOULD check and compare the following information:
 	    <t>set of PREF64 with zero lifetime.</t>
 </list>
 
-Provisioning Domains (PvD, <xref target="RFC7556"/>)-aware routers MUST only compare information scoped to the same implicit or explicit PvD.
+Provisioning Domain (PvD, <xref target="RFC7556"/>)-aware routers MUST only compare information scoped to the same implicit or explicit PvD.
 </t>
     </section>
 
