@@ -4,6 +4,7 @@
 <!ENTITY RFC4033 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4033.xml">
 <!ENTITY RFC4861 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4861.xml">
 <!ENTITY RFC6052 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6052.xml">
+<!ENTITY RFC6104 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6104.xml">
 <!ENTITY RFC6105 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6105.xml">
 <!ENTITY RFC6146 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6146.xml">
 <!ENTITY RFC6147 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6147.xml">
@@ -44,7 +45,7 @@
 <rfc ipr="trust200902"
      obsoletes=""
      category="std"
-     docName="draft-ietf-6man-ra-pref64-08">
+     docName="draft-ietf-6man-ra-pref64-09">
 
   <!-- category values: std, bcp, info, exp, and historic -->
 
@@ -155,11 +156,11 @@
     </section>
 
     <section title="Use cases for communicating the NAT64 prefix to hosts">
-        <t>On networks employing NAT64, it is useful for hosts to know the NAT64 prefix for several reasons, including the following:
+	    <t>While <xref target="RFC6147"/> assumes that a NAT64/DNS64 environment does not require any host changes for applications that work through NATs,  sometimes it is useful for hosts to know the NAT64 prefix for several reasons, including the following:
 		<list style="symbols">
 			<t>Enabling DNS64 functions on end hosts. In particular:
 			<list style="symbols">
-            <t>Local DNSSEC validation (DNS64 in stub-resolver mode). As discussed in <xref target="RFC6147"/> section 2, the stub resolver in the host "will try to obtain (real) AAAA RRs, and in case they are not available, the DNS64 function will synthesize AAAA RRs for internal usage." This is required in order to use DNSSEC on a NAT64 network.</t>
+            <t>Local DNSSEC validation (DNS64 in stub-resolver mode). As discussed in <xref target="RFC6147"/> section 2, the stub resolver in the host "will try to obtain (real) AAAA RRs, and in case they are not available, the DNS64 function will synthesize AAAA RRs for internal usage." Therefore to perform the DNS64 function the stub resolver needs to know the NAT64 prefix. This is required in order to use DNSSEC on a NAT64 network.</t>
 	    <t>Trusted DNS server. AAAA synthesis is required for the host to be able to use a DNS server not provided by the network (e.g., a DNS-over-TLS <xref target="RFC7858"/> or DNS-over-HTTPS <xref target="RFC8484"/> server with which the host has an existing trust relationship).</t>
 	    <t>Networks with no DNS64 server. Hosts that support AAAA synthesis and that are aware of the NAT64 prefix in use do not need the network to perform the DNS64 function at all.</t>
     </list></t>
@@ -178,14 +179,6 @@
 	    <t>Atomic configuration: including the NAT64 prefix in the Router Advertisement minimizes the number of packets required to configure a host. Only one packet (a Router Advertisement) is required to complete the network configuration. This speeds up the process of connecting to a network that supports NAT64/DNS64, and simplifies host implementation by removing the possibility that the host can have an incomplete layer 3 configuration (e.g., IPv6 addresses and prefixes, but no NAT64 prefix).</t>
       <t>Updatability: it is possible to change the NAT64 prefix at any time, because when it changes, it is possible to notify hosts by sending a new Router Advertisement.</t>
       <t>Deployability: all IPv6 hosts and networks are required to support Neighbor Discovery <xref target="RFC4861"/> so just a minor extension to the existing implementation is required. Other options such as <xref target="RFC7225"/> require implementing other protocols (e.g. PCP <xref target="RFC7225"/>) which could be considered an obstacle for deployment.</t>
-    </section>
-
-    <section title="Usage Guidelines">
-	    <t>This option specifies exactly one NAT64 prefix for all IPv4 destinations. If the network operator desires to route different parts of the IPv4 address space to different NAT64 devices, this can be accomplished by routing more specifics of the NAT64 prefix to those devices. For example, if the operator is using  the RFC1918 address space, e.g. 10.0.0.0/8 internally and would like to route 10.0.0.0/8 through NAT64 device A and the rest of the IPv4 space through NAT64 device B, and the operator's NAT64 prefix is 2001:db8:a:b::/96, then the operator can route 2001:db8:a:b::a00:0/104 to NAT64 A and 2001:db8:a:b::/96 to NAT64 B.</t>
-
-            <t>This option may appear more than once in a Router Advertisement (e.g. in case of graceful renumbering the network from one NAT64 prefix to another). Host behaviour with regards to synthesizing IPv6 addresses from IPv4 addresses SHOULD follow the recommendations given in Section 3 of <xref target="RFC7050"/>, limited to the NAT64 prefixes that have non-zero lifetime.</t>
-
-	    <t>In a network (or a provisioning domain) that provides both IPv4 and NAT64, it may be desirable for certain IPv4 addresses not to be translated. An example might be private address ranges that are local to the network/provisioning domain and should not be reached through the NAT64. This type of configuration cannot be conveyed to hosts using this option, or through other NAT64 prefix provisioning mechanisms such as <xref target="RFC7050"/> or <xref target="RFC7225"/>. This problem does not apply in IPv6-only networks, because in such networks, the host does not have an IPv4 address and cannot reach any IPv4 destinations without the NAT64.</t>
     </section>
 
     <section anchor="Format" title="Option format">
@@ -218,7 +211,7 @@
 				      <c>Length</c> <c> 8-bit unsigned integer.  The length of the option
 					      (including the Type and Length fields) is in units of 8 octets. The sender MUST set the length to 2.  The receiver MUST ignore the PREF64 option if the length field value is not 2.</c>
 				      <c></c><c></c>
-       <c>Scaled Lifetime</c>  <c>13-bit unsigned integer. The maximum time in units of 8 seconds over which this NAT64 prefix MAY be used. The value of the Scaled Lifetime field SHOULD by default be set to the lesser of 3 x MaxRtrAdvInterval divided by 8, or 8191. The receiver MUST multiply the Scaled Lifetime value by 8 (for example, by logical left shift) to calculate the maximum time in seconds the prefix MAY be used. Lifetime of 0 indicates that the prefix SHOULD NOT be used anymore. Router vendors SHOULD allow administrators to specify non-zero lifetime values which are not divisible by 8. In such cases the router SHOULD round the provided value up to the lesser of nearest integer divisible by 8, or 65528 and divide the result by 8 (or just perform a logical right-shift by 3) and set the Scaled Lifetime field to the resulting value. If such a non-zero lifetime value to be divided by 8 (to be subjected to a logical right-shift by 3) is less than 8 then the Scaled Lifetime field SHOULD by default be set to 1.</c>
+				      <c>Scaled Lifetime</c>  <c>13-bit unsigned integer. The maximum time in units of 8 seconds over which this NAT64 prefix MAY be used. The value of the Scaled Lifetime field SHOULD by default be set to the lesser of 3 x MaxRtrAdvInterval (<xref target="RFC4861"/>) divided by 8, or 8191. The receiver MUST multiply the Scaled Lifetime value by 8 (for example, by logical left shift) to calculate the maximum time in seconds the prefix MAY be used. Lifetime of 0 indicates that the prefix SHOULD NOT be used anymore. Router vendors SHOULD allow administrators to specify non-zero lifetime values which are not divisible by 8. In such cases the router SHOULD round the provided value up to the lesser of nearest integer divisible by 8, or 65528 and divide the result by 8 (or just perform a logical right-shift by 3) and set the Scaled Lifetime field to the resulting value. If such a non-zero lifetime value to be divided by 8 (to be subjected to a logical right-shift by 3) is less than 8 then the Scaled Lifetime field SHOULD be set to 1.</c>
        <c></c><c></c>
        <c>PLC (Prefix Length Code)</c><c>3-bit unsigned integer. This field encodes the NAT64 Prefix Length defined in <xref target="RFC6052"/>. The PLC field values 0, 1, 2, 3, 4 and 5 indicate the NAT64 prefix length of 96, 64, 56, 48, 40 and 32 bits respectively. The receiver MUST ignore the PREF64 option if the prefix length code field is not set to one of those values. </c>
 				      <c></c><c></c>
@@ -226,6 +219,13 @@
        </texttable>
             
     </section>
+    <section title="Usage Guidelines">
+	    <t>This option specifies exactly one NAT64 prefix for all IPv4 destinations. If the network operator desires to route different parts of the IPv4 address space to different NAT64 devices, this can be accomplished by routing more specifics of the NAT64 prefix to those devices. For example, if the operator is using  the RFC1918 address space, e.g. 10.0.0.0/8 internally and would like to route 10.0.0.0/8 through NAT64 device A and the rest of the IPv4 space through NAT64 device B, and the operator's NAT64 prefix is 2001:db8:a:b::/96, then the operator can route 2001:db8:a:b::a00:0/104 to NAT64 A and 2001:db8:a:b::/96 to NAT64 B.</t>
+
+            <t>This option may appear more than once in a Router Advertisement (e.g. in case of graceful renumbering the network from one NAT64 prefix to another). Host behaviour with regards to synthesizing IPv6 addresses from IPv4 addresses SHOULD follow the recommendations given in Section 3 of <xref target="RFC7050"/>, limited to the NAT64 prefixes that have non-zero lifetime.</t>
+
+	    <t>In a network (or a provisioning domain) that provides both IPv4 and NAT64, it may be desirable for certain IPv4 addresses not to be translated. An example might be private address ranges that are local to the network/provisioning domain and should not be reached through the NAT64. This type of configuration cannot be conveyed to hosts using this option, or through other NAT64 prefix provisioning mechanisms such as <xref target="RFC7050"/> or <xref target="RFC7225"/>. This problem does not apply in IPv6-only networks, because in such networks, the host does not have an IPv4 address and cannot reach any IPv4 destinations without the NAT64.</t>
+
 	    <section anchor="mult_src" title="Handling Multiple NAT64 Prefixes"> 
 		    <t>
 			    In some cases a host may receive multiple NAT64 prefixes from different sources. Possible scenarios include (but are not limited to):
@@ -250,15 +250,16 @@
 
     <section anchor="cons" title="PREF64 Consistency"> 
 	    <t>
-	    Section 6.2.7 of <xref target="RFC4861"/> recommends that routers inspect RAs sent by other routers to ensure that all routers onlink advertise the consistent information. Routers SHOULD inspect valid PREF64 options received on a given link and verify the consistency. Detected inconsistencies indicate that one or more routers might be misconfigured. Routers SHOULD log such cases to system or network management.
+	    Section 6.2.7 of <xref target="RFC4861"/> recommends that routers inspect RAs sent by other routers to ensure that all routers onlink advertise consistent information. Routers SHOULD inspect valid PREF64 options received on a given link and verify the consistency. Detected inconsistencies indicate that one or more routers might be misconfigured. Routers SHOULD log such cases to system or network management.
 Routers SHOULD check and compare the following information:
     <list style="symbols">
 	    <t>set of PREF64 with non-zero lifetime;</t>
 	    <t>set of PREF64 with zero lifetime.</t>
 </list>
 
-Provisioning Domain (PvD, <xref target="RFC7556"/>)-aware routers MUST only compare information scoped to the same implicit or explicit PvD.
+Provisioning Domain (PvD, <xref target="RFC7556"/>) aware routers MUST only compare information scoped to the same implicit or explicit PvD.
 </t>
+    </section>
     </section>
 
 
@@ -281,12 +282,19 @@ Provisioning Domain (PvD, <xref target="RFC7556"/>)-aware routers MUST only comp
 
     <section anchor="Security" title="Security Considerations">
 	    <t>Because Router Advertisements are required in all IPv6 configuration scenarios, on IPv6-only networks, Router Advertisements must already be secured, e.g., by deploying RA guard <xref target="RFC6105"/>. Providing all configuration in Router Advertisements reduces the attack surface to be targeted by malicious attackers to provide hosts with invalid configuration as compared to distributing the configuration through multiple different mechanisms that need to be secured independently.</t>
-      <t>The security measures that must already be in place to ensure that Router Advertisements are only received from legitimate sources eliminate the problem of NAT64 prefix validation described in section 3.1 of <xref target="RFC7050"/>.</t>
+	    <t>
+If a host is provided with an incorrect NAT64 prefix the IPv6-only host might not be able to communicate with IPv4-only destinations.
+Connectivity to destinations reachable over IPv6 would not be impacted just by providing a host with an incorrect prefix (however if attackers are capable of sending rogue RAs they can perform denial-of-service or man-in-the-middle attacks, as described in <xref target="RFC6104"/>).
+	    </t>
+
+	    <t>The security measures that must already be in place to ensure that Router Advertisements are only received from legitimate sources eliminate the problem of NAT64 prefix validation described in section 3.1 of <xref target="RFC7050"/>.</t>
+
+
     </section>
     <section anchor="Acknowledgements" title="Acknowledgements">
             <t>
 		    Thanks to the following people (in alphabetical order) for their review and feedback:
-		    Mikael Abrahamsson, Mark Andrews, Brian E Carpenter, David Farmer, Nick Heatley, Robert Hinden, Martin Hunek, Tatuya Jinmei, Erik Kline, Suresh Krishnan, David Lamparter, Jordi Palet Martinez, Tommy Pauly, Alexandre Petrescu, Michael Richardson, David Schinazi, Ole Troan, Bernie Volz.
+		    Mikael Abrahamsson, Mark Andrews, Brian E Carpenter, David Farmer, Nick Heatley, Robert Hinden, Martin Hunek, Tatuya Jinmei, Benjamin Kaduk, Erik Kline, Suresh Krishnan, David Lamparter, Jordi Palet Martinez, Tommy Pauly, Alexandre Petrescu, Michael Richardson, David Schinazi, Ole Troan, Bernie Volz.
     </t>
     </section>
   </middle>
@@ -303,6 +311,7 @@ Provisioning Domain (PvD, <xref target="RFC7556"/>)-aware routers MUST only comp
     </references>
 
     <references title="Informative References">
+      &RFC6104;
       &RFC6105;
       &RFC6146;
       &RFC6147;

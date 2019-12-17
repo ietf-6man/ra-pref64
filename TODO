@@ -1,1 +1,2 @@
-- Address Alexandro's comment about 'what if 3x MaxRtrAdv < 8'.
+- Start section 2 with 'While RFC6147 assumes that a NAT64/DNS64 environment does not require
+any changes on hosts for applications that work through NATs,'
