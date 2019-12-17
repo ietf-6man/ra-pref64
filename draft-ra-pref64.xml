@@ -212,12 +212,31 @@
 				      <c>Length</c> <c> 8-bit unsigned integer.  The length of the option
 					      (including the Type and Length fields) is in units of 8 octets. The sender MUST set the length to 2.  The receiver MUST ignore the PREF64 option if the length field value is not 2.</c>
 				      <c></c><c></c>
-				      <c>Scaled Lifetime</c>  <c>13-bit unsigned integer. The maximum time in units of 8 seconds over which this NAT64 prefix MAY be used. The value of the Scaled Lifetime field SHOULD by default be set to the lesser of 3 x MaxRtrAdvInterval (<xref target="RFC4861"/>) divided by 8, or 8191. The receiver MUST multiply the Scaled Lifetime value by 8 (for example, by logical left shift) to calculate the maximum time in seconds the prefix MAY be used. Lifetime of 0 indicates that the prefix SHOULD NOT be used anymore. Router vendors SHOULD allow administrators to specify non-zero lifetime values which are not divisible by 8. In such cases the router SHOULD round the provided value up to the lesser of nearest integer divisible by 8, or 65528 and divide the result by 8 (or just perform a logical right-shift by 3) and set the Scaled Lifetime field to the resulting value. If such a non-zero lifetime value to be divided by 8 (to be subjected to a logical right-shift by 3) is less than 8 then the Scaled Lifetime field SHOULD be set to 1.</c>
+				      <c>Scaled Lifetime</c>  <c>13-bit unsigned integer. The maximum time in units of 8 seconds over which this NAT64 prefix MAY be used. See <xref target="lifetime"/> for the Scaled Lifetime field processing rules.
+				      </c>
        <c></c><c></c>
        <c>PLC (Prefix Length Code)</c><c>3-bit unsigned integer. This field encodes the NAT64 Prefix Length defined in <xref target="RFC6052"/>. The PLC field values 0, 1, 2, 3, 4 and 5 indicate the NAT64 prefix length of 96, 64, 56, 48, 40 and 32 bits respectively. The receiver MUST ignore the PREF64 option if the prefix length code field is not set to one of those values. </c>
 				      <c></c><c></c>
        <c>Highest 96 bits of the prefix</c>   <c>96-bit unsigned integer. Contains bits 0 - 95 of the NAT64 prefix.</c>
        </texttable>
+
+       <section anchor="lifetime" title="Scaled Lifetime Processing">
+	       <t>
+		       It would be highly undesirable for the NAT64 preifx to have a lifetime shorter than the Router Lifetime, which is defined in the Section 4.2 of <xref target="RFC4861"/> as 16-bit unsigned integer.
+		       If the option lifetime is not alighned with the default router lifetime it might lead to scenarios when the NAT64 prefix lifetime expires before the arrival of the next unsolicited RA.
+		       Therefore the Scaled Lifetime encodes the NAT64 prefix lifetime in units of 8 seconds. 
+		       The receiver MUST multiply the Scaled Lifetime value by 8 (for example, by logical left shift) to calculate the maximum time in seconds the prefix MAY be used.
+		       Lifetime of 0 indicates that the prefix SHOULD NOT be used anymore.
+	       </t>
+	       <t>
+		       The value of the Scaled Lifetime field SHOULD by default be set to the lesser of 3 x MaxRtrAdvInterval (<xref target="RFC4861"/>) divided by 8, or 8191.
+	       </t>
+	       <t>
+		       Router vendors SHOULD allow administrators to specify non-zero lifetime values which are not divisible by 8.
+		       In such cases the router SHOULD round the provided value up to the lesser of nearest integer divisible by 8, or 65528 and divide the result by 8 (or just perform a logical right-shift by 3) and set the Scaled Lifetime field to the resulting value.
+		       If such a non-zero lifetime value to be divided by 8 (to be subjected to a logical right-shift by 3) is less than 8 then the Scaled Lifetime field SHOULD be set to 1. Thsi last step ensures that lifetimes under 8 seconds are encoded as a non-zero Scaled Lifetime.
+	       </t>
+       </section>
             
     </section>
     <section title="Usage Guidelines">
