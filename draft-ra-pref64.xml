@@ -270,6 +270,11 @@
 	    </list>
     </t>
     <t>Note that if the network provides PREF64 both via this RA option and <xref target="RFC7225"/>, hosts that receive the PREF64 via RA option may choose to use it immediately before waiting for PCP to complete, and therefore some traffic may not reflect any more detailed configuration provided by PCP.</t>
+
+    <t>
+	    The host SHOULD treat the PREF64 as being specific to the network interface it was received on.
+	    Provisioning Domain (PvD, <xref target="RFC7556"/>) aware hosts MUST treat the PREF64 as being scoped to the implicit or explicit PvD.
+    </t>
     </section>
 
     <section anchor="cons" title="PREF64 Consistency"> 
