@@ -157,7 +157,8 @@
     </section>
 
     <section title="Use cases for communicating the NAT64 prefix to hosts">
-	    <t>While <xref target="RFC6147"/> assumes that a NAT64/DNS64 environment does not require any host changes for applications that work through NATs,  sometimes it is useful for hosts to know the NAT64 prefix for several reasons, including the following:
+	    <t>
+		On networks employing NAT64, it is useful for hosts to know the NAT64 prefix for several reasons, including the following:
 		<list style="symbols">
 			<t>Enabling DNS64 functions on end hosts. In particular:
 			<list style="symbols">
