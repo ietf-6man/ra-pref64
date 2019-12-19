@@ -222,25 +222,28 @@
 
        <section anchor="lifetime" title="Scaled Lifetime Processing">
 	       <t>
-		       It would be highly undesirable for the NAT64 preifx to have a lifetime shorter than the Router Lifetime, which is defined in the Section 4.2 of <xref target="RFC4861"/> as 16-bit unsigned integer.
-		       If the option lifetime is not alighned with the default router lifetime it might lead to scenarios when the NAT64 prefix lifetime expires before the arrival of the next unsolicited RA.
+		       It would be highly undesirable for the NAT64 prefix to have a lifetime shorter than the Router Lifetime, which is defined in the Section 4.2 of <xref target="RFC4861"/> as 16-bit unsigned integer.
+		       If the NAT64 prefix lifetime is not at least equal to the default router lifetime it might lead to scenarios when the NAT64 prefix lifetime expires before the arrival of the next unsolicited RA.
 		       Therefore the Scaled Lifetime encodes the NAT64 prefix lifetime in units of 8 seconds. 
 		       The receiver MUST multiply the Scaled Lifetime value by 8 (for example, by logical left shift) to calculate the maximum time in seconds the prefix MAY be used.
+		       The maximum lifetime of the NAT64 prefix is thus 65528 seconds.
+		       To ensure that the NAT64 prefix does not expire before the default router, when using this option it is NOT RECOMMENDED to configure default router lifetimes greater than 65528 seconds.
 		       Lifetime of 0 indicates that the prefix SHOULD NOT be used anymore.
 	       </t>
 	       <t>
 		       The value of the Scaled Lifetime field SHOULD by default be set to the lesser of 3 x MaxRtrAdvInterval (<xref target="RFC4861"/>) divided by 8, or 8191.
 	       </t>
 	       <t>
-		       Router vendors SHOULD allow administrators to specify non-zero lifetime values which are not divisible by 8.
-		       In such cases the router SHOULD round the provided value up to the lesser of nearest integer divisible by 8, or 65528 and divide the result by 8 (or just perform a logical right-shift by 3) and set the Scaled Lifetime field to the resulting value.
-		       If such a non-zero lifetime value to be divided by 8 (to be subjected to a logical right-shift by 3) is less than 8 then the Scaled Lifetime field SHOULD be set to 1. Thsi last step ensures that lifetimes under 8 seconds are encoded as a non-zero Scaled Lifetime.
-	       </t>
+		       Router vendors SHOULD allow administrators to specify non-zero lifetime values which are not divisible by 8. 
+		       In such cases the router SHOULD round the provided value up to the nearest integer that is divisible by 8 and smaller than 65536, then divide the result by 8 (or perform a logical right-shift by 3), and set the Scaled Lifetime field to the resulting value. 
+		       If such a non-zero lifetime value to be divided by 8 (to be subjected to a logical right-shift by 3) is less than 8 then the Scaled Lifetime field SHOULD be set to 1.
+		       This last step ensures that lifetimes under 8 seconds are encoded as a non-zero Scaled Lifetime.
+       </t>
        </section>
             
     </section>
     <section title="Usage Guidelines">
-	    <t>This option specifies exactly one NAT64 prefix for all IPv4 destinations. If the network operator desires to route different parts of the IPv4 address space to different NAT64 devices, this can be accomplished by routing more specific routes comprising the NAT64 prefix to those devices.
+	    <t>This option specifies exactly one NAT64 prefix for all IPv4 destinations. If the network operator desires to route different parts of the IPv4 address space to different NAT64 devices, this can be accomplished by routing more specific sub-prefixes of the NAT64 prefix to those devices.
 		    For example, suppose an operator is using the <xref target="RFC1918"/> address space 10.0.0.0/8 internally.
 		    That operator might want to route 10.0.0.0/8 through NAT64 device A, and the rest of the IPv4 space through NAT64 device B.
 		    If the operator's NAT64 prefix is 2001:db8:a:b::/96, then the operator can route 2001:db8:a:b::a00:0/104 to NAT64 A and 2001:db8:a:b::/96 to NAT64 B.
@@ -257,7 +260,7 @@
 	    <t><list style="symbols">
 			    <t> the host is using multiple mechanisms to discover PREF64 prefixes (e.g. by using PCP <xref target="RFC7225"/>) and/or by resolving IPv4-only fully qualified domain name <xref target="RFC7050"/> in addition to receiving the PREF64 RA option);</t>
 			    <t> the PREF64 option presents in a single RA more than once;</t>
-			    <t> the host receives multiple RAs with different PREF64 prefixes on one or multiple interfaces.</t>
+			    <t> the host receives multiple RAs with different PREF64 prefixes on a given interface.</t>
 		    </list>
 	    </t>
 	    <t>When multiple PREF64 were discovered via RA PREF64 Option (the Option presents more than once in a single RA or multiple RAs were received), host behaviour with regards to synthesizing IPv6 addresses from IPv4 addresses SHOULD follow the recommendations given in Section 3 of <xref target="RFC7050"/>, limited to the NAT64 prefixes that have non-zero lifetime.</t>
